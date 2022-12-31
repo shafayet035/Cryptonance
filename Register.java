@@ -1,9 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 
 public class Register extends JFrame implements ActionListener {
 	JButton loginText, registerBtn;
+	JTextField userNameField, emailField, passwordField;
 	Register() {
 		super("Cryptonance | Register");
 		this.setSize(1200, 800);
@@ -40,7 +45,7 @@ public class Register extends JFrame implements ActionListener {
 		userNameLabel.setForeground(Color.white);
 		panel2.add(userNameLabel);
 		
-		JTextField userNameField = new JTextField();
+		userNameField = new JTextField();
 		userNameField.setBounds(669, 252, 463, 48);
 		userNameField.setFont(new Font("Poppins", Font.PLAIN, 16));
 		userNameField.setForeground(Color.black);
@@ -54,7 +59,7 @@ public class Register extends JFrame implements ActionListener {
 		emailText.setForeground(Color.white);
 		panel2.add(emailText);
 		
-		JTextField emailField = new JTextField();
+		emailField = new JTextField();
 		emailField.setBounds(669, 354, 463, 48);
 		emailField.setFont(new Font("Poppins", Font.PLAIN, 16));
 		emailField.setForeground(Color.black);
@@ -68,7 +73,7 @@ public class Register extends JFrame implements ActionListener {
 		passwordText.setForeground(Color.white);
 		panel2.add(passwordText);
 		
-		JPasswordField  passwordField = new JPasswordField();
+		passwordField = new JPasswordField();
 		passwordField.setBounds(669, 456, 463, 48);
 		passwordField.setFont(new Font("Poppins", Font.PLAIN, 16));
 		passwordField.setForeground(Color.black);
@@ -111,15 +116,56 @@ public class Register extends JFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent event ) {
+		
 		if(event.getSource() == loginText) {
 			Login login = new Login();
-			this.hide();
-			login.show();
+			this.setVisible(false);
+			login.setVisible(true);
 		}
+		
 		if(event.getSource() == registerBtn) {
-			Home home = new Home();
-			this.hide();
-			home.show();
+			Utils util = new Utils();
+			Account account;
+			
+			String userName = userNameField.getText();
+			String email = emailField.getText();
+			String password = passwordField.getText();
+			String userKey = util.randromString(25);
+			
+			if(userName.isEmpty() || email.isEmpty() || password.isEmpty()) {
+				JOptionPane.showMessageDialog(null, 
+						"Please enter all the required fields", "Warning!", 
+						JOptionPane.WARNING_MESSAGE);
+			} else if(!util.isValid(email)) {
+				JOptionPane.showMessageDialog(null, "Please enter a valid email address!", "Warning!", JOptionPane.WARNING_MESSAGE);
+			} else if(password.length() < 6) {
+				JOptionPane.showMessageDialog(null, "Enter at least 6 character long password!", "Warning!", JOptionPane.WARNING_MESSAGE);
+			} else {
+				try {
+					File db = new File("./database/users.txt");
+					if(!db.exists()) db.createNewFile();
+					FileWriter fw = new FileWriter(db, true);
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    PrintWriter pw = new PrintWriter(bw);
+                    pw.println("===============================================");
+                    pw.println("User Name : " + userName);
+                    pw.println("Email : " + email);
+                    pw.println("Password : " + password);
+                    pw.println("KEY : " + userKey);
+                    pw.println("BTC:0.0006897");
+                    pw.println("LTC:"+0.15);
+                    pw.println("ETH:"+0.0084);
+                    pw.println("===============================================");
+                    pw.close();
+                    account = new Account(userName, email, userKey, 0.0006897, 0.15, 0.0084);
+                    Home home = new Home(account);
+        			this.setVisible(false);
+        			home.setVisible(true);
+				} catch(Exception ex) {
+					JOptionPane.showMessageDialog(null, "Techincal Error, Please contact support team!", "Error!",
+                            JOptionPane.ERROR_MESSAGE);
+				}
+			}
 		}
 	}
 }

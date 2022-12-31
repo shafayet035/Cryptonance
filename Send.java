@@ -163,7 +163,8 @@ public class Send extends JFrame  implements ActionListener{
 		}
 		
 		if(event.getSource() == homeBtn) {
-			Home screen = new Home();
+			Account account = new Account("test", "testemail", "testKey", 50, 50, 50);
+			Home screen = new Home(account);
 			this.setVisible(false);
 			screen.setVisible(true);
 		}

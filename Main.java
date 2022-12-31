@@ -1,6 +1,6 @@
 public class Main {
 	public static void main(String args[])  {
-		Exchange login = new Exchange();
+		Login login = new Login();
 		login.setVisible(true);
 	}
 }

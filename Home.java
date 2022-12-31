@@ -6,8 +6,15 @@ import java.awt.event.ActionListener;
 public class Home extends JFrame implements ActionListener   {
 	JButton homeBtn, sendBtn, exchangeBtn, logoutBtn, copyBtn;
 	JTextField addressField;
-	Home() {
+	Account account;
+	double btc, ltc, eth;
+	
+	Utils util = new Utils();
+	
+	public Home(Account account) {
+		
 		super("Cryptonance | Home");
+		this.account = account;
 		this.setSize(1200, 800);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
@@ -73,7 +80,7 @@ public class Home extends JFrame implements ActionListener   {
 		lb1.setForeground(Color.white);
 		panel1.add(lb1);
 		
-		addressField = new JTextField("Kz5DCYErXz7VFTt4bpJ3jYe5J3Ead");
+		addressField = new JTextField(account.key.substring(account.key.lastIndexOf(":") + 2));
 		addressField.setBounds(274, 163, 400, 40);
 		addressField.setFont(new Font("Poppins", Font.PLAIN, 16));
 		addressField.setForeground(Color.white);
@@ -128,14 +135,14 @@ public class Home extends JFrame implements ActionListener   {
 		lb5.setForeground(new Color(139, 139, 139));
 		panel1.add(lb5);
 		
-		JLabel lb6 = new JLabel("$50.65");
-		lb6.setBounds(115, 431, 54, 24);
+		JLabel lb6 = new JLabel("$"+ util.doubleToString(util.convertToUsd("btc", account.BTC)));
+		lb6.setBounds(115, 431, 70, 24);
 		lb6.setFont(new Font("Poppins", Font.PLAIN, 16));
 		lb6.setForeground(new Color(255, 255, 255));
 		panel1.add(lb6);
 		
-		JLabel lb7 = new JLabel("BTC: 0.0009346");
-		lb7.setBounds(115, 462, 120, 24);
+		JLabel lb7 = new JLabel("BTC: " + util.doubleToString(account.BTC));
+		lb7.setBounds(115, 462, 200, 24);
 		lb7.setFont(new Font("Poppins", Font.PLAIN, 16));
 		lb7.setForeground(new Color(255, 255, 255));
 		panel1.add(lb7);
@@ -165,13 +172,13 @@ public class Home extends JFrame implements ActionListener   {
 		lb10.setForeground(new Color(139, 139, 139));
 		panel1.add(lb10);
 		
-		JLabel lb11 = new JLabel("$5.65");
+		JLabel lb11 = new JLabel("$"+ util.doubleToString(util.convertToUsd("ltc", account.LTC)));
 		lb11.setBounds(391, 431, 54, 24);
 		lb11.setFont(new Font("Poppins", Font.PLAIN, 16));
 		lb11.setForeground(new Color(255, 255, 255));
 		panel1.add(lb11);
 		
-		JLabel lb12 = new JLabel("BTC: 0.0009346");
+		JLabel lb12 = new JLabel("LTC: " + util.doubleToString(account.LTC));
 		lb12.setBounds(391, 462, 120, 24);
 		lb12.setFont(new Font("Poppins", Font.PLAIN, 16));
 		lb12.setForeground(new Color(255, 255, 255));
@@ -245,6 +252,7 @@ public class Home extends JFrame implements ActionListener   {
 		if(event.getSource() == copyBtn) {
 			addressField.selectAll();
 			addressField.copy();
+			JOptionPane.showMessageDialog(this, "Key Copied");
 		}
 		if(event.getSource() == exchangeBtn) {
 			Exchange screen  = new Exchange();
@@ -252,4 +260,5 @@ public class Home extends JFrame implements ActionListener   {
 			screen.setVisible(true);
 		}
 	}
+	
 }

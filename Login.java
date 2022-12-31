@@ -1,9 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Login extends JFrame  implements ActionListener  {
 	JButton loginBtn, registerText;
+	JTextField emailField, passwordField;
 	
 	Login() {
 		super("Cryptonance | Login");
@@ -23,7 +29,6 @@ public class Login extends JFrame  implements ActionListener  {
 		LeftImage.setBounds(0, 0, 600, 800);
 		panel1.add(LeftImage);
 		
-		
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(null);
 		panel2.setBackground(new Color(19,19,19));
@@ -41,7 +46,7 @@ public class Login extends JFrame  implements ActionListener  {
 		emailText.setForeground(Color.white);
 		panel2.add(emailText);
 		
-		JTextField emailField = new JTextField();
+		emailField = new JTextField();
 		emailField.setBounds(669, 314, 463, 48);
 		emailField.setFont(new Font("Poppins", Font.PLAIN, 16));
 		emailField.setForeground(Color.black);
@@ -55,7 +60,7 @@ public class Login extends JFrame  implements ActionListener  {
 		passwordText.setForeground(Color.white);
 		panel2.add(passwordText);
 		
-		JPasswordField  passwordField = new JPasswordField();
+		passwordField = new JPasswordField();
 		passwordField.setBounds(669, 417, 463, 48);
 		passwordField.setFont(new Font("Poppins", Font.PLAIN, 16));
 		passwordField.setForeground(Color.black);
@@ -104,9 +109,53 @@ public class Login extends JFrame  implements ActionListener  {
 			register.setVisible(true);
 		}
 		if(event.getSource() == loginBtn) {
-			Home home = new Home();
-			this.setVisible(false);
-			home.setVisible(true);
+			String email = emailField.getText();
+			String password = passwordField.getText();
+			
+			if(email.isEmpty() || password.isEmpty()) {
+				JOptionPane.showMessageDialog(null, 
+						"Please enter all the required fields", "Warning!", 
+						JOptionPane.WARNING_MESSAGE);
+			} else {
+				try {
+					String filePath = "./database/users.txt";
+					String emailMatch = "Email : " + email;
+					String passwordMatch = "Password : " + password;
+					BufferedReader db = new BufferedReader(new FileReader(filePath));
+					
+					int totalLines = 0;
+                    while (db.readLine() != null)
+                        totalLines++;
+                    db.close();
+                    
+                    for (int i = 0; i <= totalLines; i++) {
+                    	String findEmail = Files.readAllLines(Paths.get(filePath)).get(i);
+                    	if(findEmail.equals(emailMatch)) {
+                    		String findPassword = Files.readAllLines(Paths.get(filePath)).get(i + 1);
+                    		if(findPassword.equals(passwordMatch)) {
+                    			String username = Files.readAllLines(Paths.get(filePath)).get(i - 1);
+                    			String key = Files.readAllLines(Paths.get(filePath)).get(i + 2);
+                    			String btc = Files.readAllLines(Paths.get(filePath)).get(i + 3);
+                    			String ltc = Files.readAllLines(Paths.get(filePath)).get(i + 4);
+                    			String eth = Files.readAllLines(Paths.get(filePath)).get(i + 5);
+                    			double BTC = Double.parseDouble(btc.substring(btc.lastIndexOf(":") + 1));
+                    			double LTC = Double.parseDouble(ltc.substring(ltc.lastIndexOf(":") + 1));
+                    			double ETH = Double.parseDouble(eth.substring(eth.lastIndexOf(":") + 1));
+                    			Account account = new Account(username, email, key, BTC, LTC, ETH);
+                    			Home home = new Home(account);
+                    			home.setVisible(true);
+                    			this.setVisible(false);
+                    			break;
+                    		}
+                    	} 
+                    }
+                    
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, 
+							"Invalid Email or Password!", "Warning", 
+							JOptionPane.WARNING_MESSAGE);
+				}
+			}
 		}
 	}
 }
