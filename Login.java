@@ -18,6 +18,9 @@ public class Login extends JFrame  implements ActionListener  {
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		
+		ImageIcon icon = new ImageIcon("images/icon.png");
+		this.setIconImage(icon.getImage());
+		
 		
 		JPanel panel1 = new JPanel();
 		panel1.setLayout(null);

@@ -4,21 +4,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Home extends JFrame implements ActionListener   {
-	JButton homeBtn, sendBtn, exchangeBtn, logoutBtn, copyBtn;
+	JButton homeBtn, sendBtn, exchangeBtn, logoutBtn, copyBtn, usersBtn;
 	JTextField addressField;
-	Account account;
 	double btc, ltc, eth;
+	
+	Account account;
 	
 	Utils util = new Utils();
 	
 	public Home(Account account) {
 		
 		super("Cryptonance | Home");
-		this.account = account;
 		this.setSize(1200, 800);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
+		
+		this.account = account;
+		
+		ImageIcon icon = new ImageIcon("images/icon.png");
+		this.setIconImage(icon.getImage());
 		
 		JPanel panel1 = new JPanel();
 		panel1.setLayout(null);
@@ -29,6 +34,17 @@ public class Home extends JFrame implements ActionListener   {
 		JLabel logoLabel = new JLabel("", logo, JLabel.CENTER);
 		logoLabel.setBounds(91, 36, 211, 56);
 		panel1.add(logoLabel);
+		
+		usersBtn = new JButton("Users");
+		usersBtn.setBounds(609, 49, 60, 30);
+		usersBtn.setFont(new Font("Poppins", Font.PLAIN, 20));
+		usersBtn.setForeground(Color.white);
+		usersBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		usersBtn.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		usersBtn.setFocusable(false);
+		usersBtn.setFocusPainted(false); 
+		usersBtn.setContentAreaFilled(false);
+		panel1.add(usersBtn);
 		
 		homeBtn = new JButton("Home");
 		homeBtn.setBounds(704, 49, 60, 30);
@@ -173,7 +189,7 @@ public class Home extends JFrame implements ActionListener   {
 		panel1.add(lb10);
 		
 		JLabel lb11 = new JLabel("$"+ util.doubleToString(util.convertToUsd("ltc", account.LTC)));
-		lb11.setBounds(391, 431, 54, 24);
+		lb11.setBounds(391, 431, 70, 24);
 		lb11.setFont(new Font("Poppins", Font.PLAIN, 16));
 		lb11.setForeground(new Color(255, 255, 255));
 		panel1.add(lb11);
@@ -209,13 +225,13 @@ public class Home extends JFrame implements ActionListener   {
 		lb14.setForeground(new Color(139, 139, 139));
 		panel1.add(lb14);
 		
-		JLabel lb15 = new JLabel("$49.65");
-		lb15.setBounds(667, 431, 60, 24);
+		JLabel lb15 = new JLabel("$"+ util.doubleToString(util.convertToUsd("eth", account.ETH)));
+		lb15.setBounds(667, 431, 70, 24);
 		lb15.setFont(new Font("Poppins", Font.PLAIN, 16));
 		lb15.setForeground(new Color(255, 255, 255));
 		panel1.add(lb15);
 		
-		JLabel lb16 = new JLabel("ETH: 5.1354");
+		JLabel lb16 = new JLabel("ETH: " + util.doubleToString(account.ETH));
 		lb16.setBounds(667, 462, 120, 24);
 		lb16.setFont(new Font("Poppins", Font.PLAIN, 16));
 		lb16.setForeground(new Color(255, 255, 255));
@@ -232,6 +248,7 @@ public class Home extends JFrame implements ActionListener   {
 		sendBtn.addActionListener(this);
 		copyBtn.addActionListener(this);
 		exchangeBtn.addActionListener(this);
+		usersBtn.addActionListener(this);
 		
 		this.add(panel1);
 	}
@@ -244,7 +261,7 @@ public class Home extends JFrame implements ActionListener   {
 		}
 		
 		if(event.getSource() == sendBtn) {
-			Send screen  = new Send();
+			Send screen  = new Send(this.account);
 			this.setVisible(false);
 			screen.setVisible(true);
 		}
@@ -255,7 +272,12 @@ public class Home extends JFrame implements ActionListener   {
 			JOptionPane.showMessageDialog(this, "Key Copied");
 		}
 		if(event.getSource() == exchangeBtn) {
-			Exchange screen  = new Exchange();
+			Exchange screen  = new Exchange(this.account);
+			this.setVisible(false);
+			screen.setVisible(true);
+		}
+		if(event.getSource() == usersBtn) {
+			Users screen  = new Users(this.account);
 			this.setVisible(false);
 			screen.setVisible(true);
 		}

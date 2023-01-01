@@ -1,13 +1,23 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-public class ExchangeSuccess extends JFrame implements ActionListener  {
+public class Users extends JFrame implements ActionListener  {
+	
 	Account account;
-	JButton homeBtn, sendBtn, exchangeBtn, logoutBtn, okBtn, usersBtn;
-	ExchangeSuccess(Account account) {
-		super("Cryptonance | Home");
+	JButton homeBtn, sendBtn, exchangeBtn, logoutBtn, okBtn;
+	
+	String[] column = { "User Name", "Email", "Key", "BTC", "LTC", "ETH" };
+	
+	Users(Account account) {
+		super("Cryptonance | All Users");
 		this.setSize(1200, 800);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
@@ -27,17 +37,6 @@ public class ExchangeSuccess extends JFrame implements ActionListener  {
 		JLabel logoLabel = new JLabel("", logo, JLabel.CENTER);
 		logoLabel.setBounds(91, 36, 211, 56);
 		panel1.add(logoLabel);
-		
-		usersBtn = new JButton("Users");
-		usersBtn.setBounds(609, 49, 60, 30);
-		usersBtn.setFont(new Font("Poppins", Font.PLAIN, 20));
-		usersBtn.setForeground(Color.white);
-		usersBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		usersBtn.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-		usersBtn.setFocusable(false);
-		usersBtn.setFocusPainted(false); 
-		usersBtn.setContentAreaFilled(false);
-		panel1.add(usersBtn);
 		
 		homeBtn = new JButton("Home");
 		homeBtn.setBounds(704, 49, 60, 30);
@@ -82,45 +81,56 @@ public class ExchangeSuccess extends JFrame implements ActionListener  {
 		logoutBtn.setFocusPainted(false); 
 		logoutBtn.setContentAreaFilled(false);
 		panel1.add(logoutBtn);
+	
 		
-		JPanel panel2 = new JPanel();
-		panel2.setLayout(null);
-		panel2.setBackground(new Color(37, 37, 37));
-		panel2.setBounds(341, 272, 518, 257);
+		DefaultTableModel model = new DefaultTableModel();
+		String[] rows = new String[6];
+	 
+		JTable table = new JTable();
+		table.setFont(new Font("Poppins", Font.PLAIN, 16));
+		model.setColumnIdentifiers(column);
+        table.setModel(model);
+        table.setRowHeight(30);
 		
-		
-		ImageIcon checkIcon = new ImageIcon("images/check.png");
-		JLabel checkLabel = new JLabel("", checkIcon, JLabel.CENTER);
-		checkLabel.setBounds(568, 324, 63, 63);
-		panel1.add(checkLabel);
-		
-		
-		JLabel l1 = new JLabel("Currency Exchanged Sent Successfully");
-		l1.setBounds(420, 400, 400, 24);
-		l1.setFont(new Font("Poppins", Font.PLAIN, 20));
-		l1.setForeground(Color.white);
-		panel1.add(l1);
-		
-		
-		okBtn = new JButton("Ok");
-		okBtn.setBounds(535, 442, 122, 38);
-		okBtn.setBackground(new Color(85,151,251));
-		okBtn.setForeground(Color.white);
-		okBtn.setFont(new Font("Poppins", Font.BOLD, 18));
-		okBtn.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-		okBtn.setFocusable(false);
-		okBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		panel1.add(okBtn);
+		JScrollPane sp = new JScrollPane(table);
+		sp.setBounds(91, 134, 981, 548);
+		this.add(sp);
 		
 		logoutBtn.addActionListener(this);
 		homeBtn.addActionListener(this);
 		sendBtn.addActionListener(this);
-		okBtn.addActionListener(this);
 		exchangeBtn.addActionListener(this);
-		usersBtn.addActionListener(this);
 		
-		panel1.add(panel2);
 		this.add(panel1);
+		
+		
+		
+		  try {
+			String filePath = "./database/users.txt";
+			BufferedReader db = new BufferedReader(new FileReader(filePath));
+			
+			int totalLines = 0;
+            while (db.readLine() != null)
+                totalLines++;
+            db.close();
+
+            for (int i = 0; i < totalLines; i++) {
+                String line = Files.readAllLines(Paths.get(filePath)).get(i);
+                String match = line.substring(0, 4);
+                if (match.equals("User")) {
+                    rows[0] = Files.readAllLines(Paths.get(filePath)).get(i).substring(12);
+                    rows[1] = Files.readAllLines(Paths.get(filePath)).get(i + 1).substring(8);
+                    rows[2] = Files.readAllLines(Paths.get(filePath)).get(i + 3).substring(6);
+                    rows[3] = Files.readAllLines(Paths.get(filePath)).get(i + 4).substring(4);
+                    rows[4] = Files.readAllLines(Paths.get(filePath)).get(i + 5).substring(4);
+                    rows[5] = Files.readAllLines(Paths.get(filePath)).get(i + 6).substring(4);
+                    model.addRow(rows);
+                }
+            }
+
+	        } catch (Exception ex) {
+	            System.out.println(ex.getMessage());
+	        }
 	}
 	
 	
@@ -131,24 +141,18 @@ public class ExchangeSuccess extends JFrame implements ActionListener  {
 			screen.setVisible(true);
 		}
 		
-		if(event.getSource() == okBtn || event.getSource() == homeBtn) {
-			Home screen = new Home(this.account);
-			this.setVisible(false);
-			screen.setVisible(true);
-		}
-		
 		if(event.getSource() == sendBtn) {
 			Send screen = new Send(this.account);
 			this.setVisible(false);
 			screen.setVisible(true);
 		}
-		if(event.getSource() == exchangeBtn) {
-			Exchange screen  = new Exchange(this.account);
+		if(event.getSource() == homeBtn) {
+			Home screen = new Home(this.account);
 			this.setVisible(false);
 			screen.setVisible(true);
 		}
-		if(event.getSource() == usersBtn) {
-			Users screen  = new Users(this.account);
+		if(event.getSource() == exchangeBtn) {
+			Exchange screen  = new Exchange(this.account);
 			this.setVisible(false);
 			screen.setVisible(true);
 		}

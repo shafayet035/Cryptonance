@@ -13,6 +13,34 @@ public class Utils {
 	public double ltcToUsd = 69;
 	public double ethToUsd = 1197;
 	
+	public double exchange(String from, String to, double amount) {
+		if(from == "BTC" && to == "ETH") {
+			return btcToEth * amount;
+		}
+		
+		if(from == "BTC" && to == "LTC") {
+			return btcToLtc * amount;
+		}
+		
+		if(from == "ETH" && to == "BTC") {
+			return ethToBtc * amount;
+		}
+		
+		if(from == "ETH" && to == "LTC") {
+			return ethToLtc * amount;
+		}
+		
+		if(from == "LTC" && to == "ETH") {
+			return ltcToEth * amount;
+		}
+		
+		if(from == "LTC" && to == "BTC") {
+			return ltcToBtc * amount;
+		}
+		
+		return 0;
+	}
+	
 	public boolean isValid(String email) {
 	    String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
 	                        "[a-zA-Z0-9_+&*-]+)*@" +
@@ -53,5 +81,13 @@ public class Utils {
 	 
 	 public String doubleToString(double amount) {
 		 return String.format("%.9f", amount);
+	 }
+	 
+	 public Boolean checkOnlyNumbers(String s) {
+		 String regex = "[0-9]*\\.[0-9]*";
+		 if(s.matches(regex)) {
+			 return true;
+		 }
+		 return false;
 	 }
 }

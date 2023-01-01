@@ -11,4 +11,15 @@ public class Account {
 		this.LTC = LTC;
 		this.ETH = ETH;
 	}
+	
+	void setBtc(double BTC) {
+		this.BTC = BTC;
+	}
+	void setLtc(double LTC) {
+		this.LTC = LTC;
+	}
+	void setEth(double ETH) {
+		this.ETH = ETH;
+	}
+	
 }

@@ -4,13 +4,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SendSuccess extends JFrame implements ActionListener  {
-	JButton homeBtn, sendBtn, exchangeBtn, logoutBtn, okBtn;
-	SendSuccess() {
+	Account account;
+	JButton homeBtn, sendBtn, exchangeBtn, logoutBtn, okBtn, usersBtn;
+	SendSuccess(Account account) {
 		super("Cryptonance | Home");
 		this.setSize(1200, 800);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
+		
+		ImageIcon icon = new ImageIcon("images/icon.png");
+		this.setIconImage(icon.getImage());
+		
+		this.account = account;
 		
 		JPanel panel1 = new JPanel();
 		panel1.setLayout(null);
@@ -22,10 +28,21 @@ public class SendSuccess extends JFrame implements ActionListener  {
 		logoLabel.setBounds(91, 36, 211, 56);
 		panel1.add(logoLabel);
 		
+		usersBtn = new JButton("Users");
+		usersBtn.setBounds(609, 49, 60, 30);
+		usersBtn.setFont(new Font("Poppins", Font.PLAIN, 20));
+		usersBtn.setForeground(Color.white);
+		usersBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		usersBtn.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		usersBtn.setFocusable(false);
+		usersBtn.setFocusPainted(false); 
+		usersBtn.setContentAreaFilled(false);
+		panel1.add(usersBtn);
+		
 		homeBtn = new JButton("Home");
 		homeBtn.setBounds(704, 49, 60, 30);
 		homeBtn.setFont(new Font("Poppins", Font.PLAIN, 20));
-		homeBtn.setForeground(new Color(85,151,251));
+		homeBtn.setForeground(Color.white);
 		homeBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		homeBtn.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
 		homeBtn.setFocusable(false);
@@ -100,6 +117,7 @@ public class SendSuccess extends JFrame implements ActionListener  {
 		sendBtn.addActionListener(this);
 		okBtn.addActionListener(this);
 		exchangeBtn.addActionListener(this);
+		usersBtn.addActionListener(this);
 		
 		panel1.add(panel2);
 		this.add(panel1);
@@ -114,19 +132,23 @@ public class SendSuccess extends JFrame implements ActionListener  {
 		}
 		
 		if(event.getSource() == okBtn || event.getSource() == homeBtn) {
-			Account account = new Account("test", "testemail", "testKey", 50, 50, 50);
-			Home screen = new Home(account);
+			Home screen = new Home(this.account);
 			this.setVisible(false);
 			screen.setVisible(true);
 		}
 		
 		if(event.getSource() == sendBtn) {
-			Send screen = new Send();
+			Send screen = new Send(this.account);
 			this.setVisible(false);
 			screen.setVisible(true);
 		}
 		if(event.getSource() == exchangeBtn) {
-			Exchange screen  = new Exchange();
+			Exchange screen  = new Exchange(this.account);
+			this.setVisible(false);
+			screen.setVisible(true);
+		}
+		if(event.getSource() == usersBtn) {
+			Users screen  = new Users(this.account);
 			this.setVisible(false);
 			screen.setVisible(true);
 		}

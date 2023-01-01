@@ -20,6 +20,9 @@ public class Register extends JFrame implements ActionListener {
 		JLabel LeftImage = new JLabel("", leftimg, JLabel.CENTER);
 		LeftImage.setBounds(0, 0, 600, 800);
 		
+		ImageIcon icon = new ImageIcon("images/icon.png");
+		this.setIconImage(icon.getImage());
+		
 		
 		JPanel panel1 = new JPanel();
 		panel1.setLayout(null);
@@ -152,12 +155,12 @@ public class Register extends JFrame implements ActionListener {
                     pw.println("Email : " + email);
                     pw.println("Password : " + password);
                     pw.println("KEY : " + userKey);
-                    pw.println("BTC:0.0006897");
-                    pw.println("LTC:"+0.15);
-                    pw.println("ETH:"+0.0084);
+                    pw.println("BTC:0.006897");
+                    pw.println("LTC:"+2.15);
+                    pw.println("ETH:"+0.84);
                     pw.println("===============================================");
                     pw.close();
-                    account = new Account(userName, email, userKey, 0.0006897, 0.15, 0.0084);
+                    account = new Account(userName, email, "KEY : " + userKey, 0.006897, 2.15, 0.84);
                     Home home = new Home(account);
         			this.setVisible(false);
         			home.setVisible(true);
